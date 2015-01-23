@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
-	"golang.org/x/net/html"
 	"io/ioutil"
-	"net/html"
+	"launchpad.net/xmlpath"
+	"log"
+	"net/http"
+	"strings"
 )
 
 func main() {
@@ -14,8 +16,24 @@ func main() {
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+	reader := strings.NewReader(string(body))
 
-	fmt.Printf(string(body))
+	xmlroot, xmlerr := xmlpath.ParseHTML(reader)
+
+	if xmlerr != nil {
+		log.Fatal(xmlerr)
+	}
+
+	path := xmlpath.MustCompile("//div[@id=someid]")
+	if value, ok := path.String(xmlroot); ok {
+		log.Println("Found:", value)
+	}
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//fmt.Printf(string(body))
 	fmt.Printf("hello from golang")
 
 }
