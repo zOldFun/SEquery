@@ -37,6 +37,6 @@ func main() {
 	}
 
 	fmt.Printf(string(body))
-	fmt.Printf("hello from golang")
+	//fmt.Printf("hello from golang")
 
 }
